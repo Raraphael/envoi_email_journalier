@@ -45,14 +45,19 @@ print("la récupération du fichier s'est faite avec succès")
 
 #Date du jour 
 ddj  = datetime.date.today().strftime('%d/%m/%Y')
+
 ## Email d'envoi
 email_user = "37raphael.bitoun@gmail.com"
+
 ## Email de reception  --> xxxxx@cefim.eu
 email_destination = 
+
 #Objet du message
 Subject = 'Emargement Rbitoun data analyst '+ddj
+
 ## pièce jointe
 filename = 'emargement.pdf'
+
 # Corps du message
 body = "Bonjour Séverine\nci-joint mon émargement du {}\nBonne Journée\nBien à toi\nRaphaël Bitoun".format(ddj)
 
