@@ -1,6 +1,4 @@
-#### ENVOI EMAIL JOURNALIER DATA ANALYST ####
-### NECESSITE D'AVOIR SIGNE LA FEUILLE PDF ET ENREGISTRE A LA RACINE DE CE FICHIER 
-### test git###
+#### sending a daily email with an attachment with today's date written on it ####
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -15,12 +13,12 @@ import re
 import sys
 import io
 
-### PARTIE 1 ECRITURE DE LA DATE DU JOUR SUR LE FICHIER PDF ########
+### PART 1 WRIING DATE ON PDF FILE ###
 packet = io.BytesIO()
 # create a new PDF with Reportlab
 can = canvas.Canvas(packet, pagesize=letter)
-ddj_write  = datetime.date.today().strftime('%d    %m      %Y')        #récupère la date du jour pour l'écrire sur le pdf
-can.drawString(365, 632, ddj_write)            # écriture ddj dans le document à la bonne place
+ddj_write  = datetime.date.today().strftime('%d    %m      %Y')        #spaces to fit in the pdf boxes
+can.drawString(365, 632, ddj_write)     
 can.save()
 #move to the beginning of the StringIO buffer
 packet.seek(0)
@@ -39,36 +37,34 @@ output.write(outputStream)
 outputStream.close()
 
 print("la récupération du fichier s'est faite avec succès")
-#### PARTIE 2 ENVOI DE L'EMAIL #####
-
-
-
+#### PART 2 SEND EMAIL#####
 
 #Date du jour 
 ddj  = datetime.date.today().strftime('%d/%m/%Y')
 
-## Email d'envoi
+# Email adress
 email_user = "37raphael.bitoun@gmail.com"
 
-## Email de reception  --> xxxxx@cefim.eu
+# reception email  --> xxxxx@cefim.eu
 email_destination = 
 
-#Objet du message
+#Subject of the message
 Subject = 'Emargement Rbitoun data analyst '+ddj
 
-## pièce jointe
+
 filename = 'emargement.pdf'
 
-# Corps du message
+# message body
 body = "Bonjour Séverine\nci-joint mon émargement du {}\nBonne Journée\nBien à toi\nRaphaël Bitoun".format(ddj)
 
-### RECUPERATION DU FICHIER PDF SUR LE BUREAU ###
+#Retrieving the pdf at the root of the script
 path = os.getcwd()
 files = os.listdir(path)
 research = re.compile('.*\.pdf')
-filename = (list(filter(research.match, files)))[0] ## liste des fichier matchant avec la RegExp -> normalement un seul le pdf à envoyer
+#Attached document
+filename = (list(filter(research.match, files)))[0]
 
-# instanciation du message
+# message instantiation
 msg = MIMEMultipart()
 msg['From'] = email_user
 msg['to'] = email_destination
@@ -76,7 +72,7 @@ msg['subject'] = Subject
 msg.attach(MIMEText(body, 'plain'))
 attachment = open(filename, 'rb')
 
-# Instanciation de l'objet permettant d'encoder le document
+# encoding document
 part = MIMEBase("application", 'octet-stream')
 part.set_payload((attachment).read())
 encoders.encode_base64(part)
